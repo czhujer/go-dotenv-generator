@@ -1,0 +1,4 @@
+# github.com/joho/godotenv v1.3.0
+github.com/joho/godotenv
+# github.com/sethvargo/go-password v0.1.2
+github.com/sethvargo/go-password/password
