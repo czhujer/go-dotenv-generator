@@ -25,8 +25,5 @@ deploy:
   file:
     - go-dotenv-generator
   on:
-    # What to repository to build
     repo: czhujer/go-dotenv-generator
-    # Only build binaries for tagged commits
     tags: true
-    condition: $LATEST = true
