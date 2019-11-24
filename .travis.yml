@@ -1,22 +1,35 @@
 language: go
-sudo: false
-matrix:
-  include:
-  - go: 1.13.x
-before_install:
-- 
-install:
-- 
+
+# Force-enable Go modules. Also force go to use the code in vendor/
+# These will both be unnecessary when Go 1.14 lands.
+env: GO111MODULE=on GOFLAGS='-mod vendor'
+
+# You don't need to test on very old versions of the Go compiler. It's the user's
+# responsibility to keep their compiler up to date.
+go:
+  - 1.13.x
+
+# Only clone the most recent commit.
+git:
+  depth: 1
+
+# Skip the install step. Don't `go get` dependencies. Only build with the code
+# in vendor/
+install: true
+
 script:
 - diff -u <(echo -n) <(gofmt -d .)
 - go vet $(go list ./... | grep -v /vendor/)
 - go test -v -race ./...
 - go build -o go-dotenv-generator cmd/godotenvgenerator/cmd.go
+
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key:
     secure: cj9bXAU5anQ/jEUJdXhGk2MU0Br4GteYsy2u6yPNWyvTPJ8LD/qtRE2TCZR3/2NgrlHMN+OSACqjv8P/zF1kS9Q/VW/DZ7vykxGNkajfcs0qRVp0UMmwakPdkMPLn+mTol5jEoN5bq7p0XswiRCqLQ49Q8iJVqvwmpJ40P5nsP7j6dIulGHRCg/FqKQnrPrBahLzQYg+fhYzVs+/MCQSOObr8mHCBnGyc0RZ99pONpsXaoe5piQo95qpY0fIREF45NvPcjGt4tZhQwwy502GhLaX0GldjF5s7slJE+5sntrzIun7ngfRhaP9YErFYOMgE/i4Ddu7HZJNkQi4RK/ZkBhRmfVgaA2IWeLaTOTz9pINLH5A6o5cR6PIJOdEqpunOPTNtRpz0Bh/9wiMXYEtDrcMwosqEPbetH8mfQnraGOxeXK4RhAtqdquYsmuTtddi06L7PQrpOWMklZvVzDuVChc3iUc0nX/nW8WlwHgn0+zdIUhE9mErdw2oxe332alih0qHnKFD8+rZjisNIUQzcJiHMxVaOkvIrig7g/kxC+yxdv3BcvCmJ3OStINLfRXOFS+/11mXEl/ew+IecUA/z2i2FmsKHRMcSxzHezCWV++2q4i+EpwUjkC8nKATIkha/eKEHAQBGWZylrFgSRna5ctJJrYlwrjjg6jNnCGbmk=
-  file: go-dotenv-generator
+  file:
+  - go-dotenv-generator
   on:
     repo: czhujer/go-dotenv-generator
     tags: true
