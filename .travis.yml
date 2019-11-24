@@ -19,3 +19,4 @@ deploy:
   file: go-dotenv-generator
   on:
     repo: czhujer/go-dotenv-generator
+    tags: true
