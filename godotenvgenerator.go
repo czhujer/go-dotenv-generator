@@ -7,20 +7,18 @@ import (
 	"strings"
 )
 
-const doubleQuoteSpecialChars = "\\\n\r\"!$`"
-
 // Write serializes the given environment and writes it to a file
 func Write(envMap map[string]string, filename string) error {
-	content, error := Marshal(envMap)
-	if error != nil {
-		return error
+	content, err := Marshal(envMap)
+	if err != nil {
+		return err
 	}
-	file, error := os.Create(filename)
-	if error != nil {
-		return error
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
 	}
-	_, err := file.WriteString(content)
-	return err
+	_, err2 := file.WriteString(content)
+	return err2
 }
 
 // Marshal outputs the given environment as a dotenv-formatted environment file.
@@ -28,7 +26,7 @@ func Write(envMap map[string]string, filename string) error {
 func Marshal(envMap map[string]string) (string, error) {
 	lines := make([]string, 0, len(envMap))
 	for k, v := range envMap {
-		lines = append(lines, fmt.Sprintf(`%s="%s"`, k, doubleQuoteEscape(v)))
+		lines = append(lines, fmt.Sprintf(`%s=%s`, k, v))
 	}
 	sort.Strings(lines)
 	return strings.Join(lines, "\n"), nil
