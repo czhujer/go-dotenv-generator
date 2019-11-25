@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	godotenvgenerator "github.com/czhujer/go-dotenv-generator"
 	"github.com/joho/godotenv"
 	"github.com/sethvargo/go-password/password"
 	"log"
@@ -67,7 +68,7 @@ example
 	}
 
 	// write keys to file
-	err = godotenv.Write(oldItems, envFile)
+	err = godotenvgenerator.Write(oldItems, envFile)
 	if err != nil {
 		log.Fatal(err)
 	}
